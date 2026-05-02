@@ -22,6 +22,17 @@
     });
   }
 
+  /* Center pricing card on anchor click */
+  document.querySelectorAll('a[href="#pricing"]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const card = document.querySelector('.cta-final__card');
+      if (card) {
+        e.preventDefault();
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
+
   /* Sticky shadow on scroll */
   if (navbar) {
     window.addEventListener('scroll', () => {

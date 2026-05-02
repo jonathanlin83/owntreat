@@ -12,7 +12,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=DM+Sans:wght@400;500&family=Geist:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/reset.css" />
   <link rel="stylesheet" href="css/tokens.css" />
@@ -25,14 +25,8 @@
   <!-- ── Skip link ── -->
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- Ambient background orbs -->
-  <div class="bg-orbs" aria-hidden="true">
-    <div class="bg-orb bg-orb--1"></div>
-    <div class="bg-orb bg-orb--2"></div>
-    <div class="bg-orb bg-orb--3"></div>
-    <div class="bg-orb bg-orb--4"></div>
-    <div class="bg-orb bg-orb--5"></div>
-  </div>
+  <!-- Animated WebGL background -->
+  <canvas class="bg-canvas" aria-hidden="true"></canvas>
 
   <!-- ══════════════════════════════════════════
        1. NAVBAR
@@ -56,7 +50,7 @@
 
       <div class="navbar__actions">
         <a href="#login" class="navbar__login">Log in</a>
-        <a href="#pricing" class="btn btn--primary btn--sm">Join Free</a>
+        <a href="/get-started" class="btn btn--primary btn--sm">Get Started</a>
       </div>
 
       <button class="navbar__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -72,7 +66,7 @@
         <li><a href="#pricing" class="navbar__link">Pricing</a></li>
       </ul>
       <a href="#login" class="navbar__link">Log in</a>
-      <a href="#pricing" class="btn btn--primary">Join Free</a>
+      <a href="/get-started" class="btn btn--primary">Get Started</a>
     </div>
   </header>
 
@@ -203,7 +197,7 @@
             </div>
             <span class="hero__qr-url">app.owntreat.com</span>
           </a>
-          <a href="#pricing" class="btn btn--primary hero__cta">Join Free — Until September</a>
+          <a href="/get-started" class="btn btn--primary hero__cta">Get Started — It's Free</a>
         </div>
       </div>
     </section>
@@ -294,7 +288,7 @@
         <div class="comparison__grid">
 
           <!-- Left: The Old Way -->
-          <div class="comparison__card comparison__card--dark">
+          <div class="comparison__card comparison__card--dark fade-left">
             <div class="comparison__card-header">
               <span class="comparison__icon comparison__icon--cross" aria-hidden="true">✕</span>
               <h3 class="comparison__card-title">The Old Way</h3>
@@ -307,7 +301,7 @@
           </div>
 
           <!-- Right: The OwnTreat Way -->
-          <div class="comparison__card comparison__card--pink">
+          <div class="comparison__card comparison__card--pink fade-right">
             <div class="comparison__card-header">
               <span class="comparison__icon comparison__icon--check" aria-hidden="true">✓</span>
               <h3 class="comparison__card-title">The OwnTreat Way</h3>
@@ -322,7 +316,7 @@
         </div>
 
         <!-- Quote banner -->
-        <div class="comparison__quote">
+        <div class="comparison__quote fade-up" style="--delay: 1">
           <p>"Influencers give you a moment. Your customers give you a movement."</p>
         </div>
       </div>
@@ -336,7 +330,7 @@
         <div class="ugc-feature__inner">
 
           <!-- Left: mockup visual -->
-          <div class="ugc-feature__visual" aria-hidden="true">
+          <div class="ugc-feature__visual fade-left" aria-hidden="true">
             <div class="ugc-feature__mockup-wrap">
 
               <!-- Card 1: Instagram Post -->
@@ -427,7 +421,7 @@
           </div>
 
           <!-- Right: text -->
-          <div class="ugc-feature__text">
+          <div class="ugc-feature__text fade-right">
             <h2 class="ugc-feature__title">Every Phone is a Camera.<br>Every Camera is a Studio.</h2>
             <p class="ugc-feature__sub">Give them a reason to post. A free cookie. A drink upgrade. 10% off. That's all it takes.</p>
             <div class="ugc-feature__callout">
@@ -447,8 +441,8 @@
     <section class="qr-engine section" aria-label="One QR Code features">
       <div class="container">
         <div class="qr-engine__header">
-          <h2 class="qr-engine__title">One QR Code. Your Entire Marketing Engine.</h2>
-          <p class="qr-engine__sub">Place it on your table. Stick it on your counter. Print it on your receipt.<br>No app. No signup. Just scan.</p>
+          <h2 class="qr-engine__title fade-up">One QR Code. Your Entire Marketing Engine.</h2>
+          <p class="qr-engine__sub fade-up" style="--delay: 1">Place it on your table. Stick it on your counter. Print it on your receipt.<br>No app. No signup. Just scan.</p>
         </div>
         <div class="qr-engine__grid">
 
@@ -499,16 +493,19 @@
       <div class="container">
         <div class="stats__grid">
           <div class="stats__item fade-up">
-            <span class="stats__number">74<span class="stats__pct">%</span></span>
+            <span class="stats__number"><span class="stats__count" data-count="74">74</span><span class="stats__pct">%</span></span>
             <p class="stats__label">of diners use social media<br />to decide where to eat</p>
+            <a class="stats__source" href="https://cropink.com/restaurant-social-media-statistics/" target="_blank" rel="noopener">Cropink</a>
           </div>
           <div class="stats__item fade-up" style="--delay: 1">
-            <span class="stats__number">73<span class="stats__pct">%</span></span>
+            <span class="stats__number"><span class="stats__count" data-count="73">73</span><span class="stats__pct">%</span></span>
             <p class="stats__label">of Gen Z & Millennials visited a restaurant because of a social media review</p>
+            <a class="stats__source" href="https://www.nrn.com/marketing-branding/73-millennials-and-gen-z-let-social-media-guide-their-restaurant-choices" target="_blank" rel="noopener">Nation's Restaurant News</a>
           </div>
           <div class="stats__item fade-up" style="--delay: 2">
-            <span class="stats__number">92<span class="stats__pct">%</span></span>
+            <span class="stats__number"><span class="stats__count" data-count="92">92</span><span class="stats__pct">%</span></span>
             <p class="stats__label">of consumers trust UGC more<br />than traditional advertising</p>
+            <a class="stats__source" href="https://www.nielsen.com/insights/2012/global-trust-in-advertising-and-brand-messages/" target="_blank" rel="noopener">Nielsen</a>
           </div>
         </div>
       </div>
@@ -520,8 +517,8 @@
     <section class="hiw section" id="how-it-works" aria-label="How OwnTreat works">
       <div class="container">
         <div class="hiw__header">
-          <span class="section-label">Simple by design</span>
-          <h2 class="hiw__title fade-up">Three steps.<br />Zero friction.</h2>
+          <span class="section-label fade-up">Simple by design</span>
+          <h2 class="hiw__title fade-up" style="--delay: 1">Three steps.<br />Zero friction.</h2>
         </div>
 
         <div class="hiw__steps">
@@ -667,12 +664,12 @@
     <!-- ══════════════════════════════════════════
          10. FINAL CTA
     ══════════════════════════════════════════ -->
-    <section class="cta-final section" aria-label="Get started">
+    <section class="cta-final section" id="pricing" aria-label="Get started">
       <div class="container container--narrow">
         <div class="cta-final__card">
           <span class="cta-final__badge">Early Adopter Offer</span>
           <h2 class="cta-final__title fade-up">The Most Affordable Marketing You Haven't Tried Yet. <span class="cta-final__accent">And It's Free Now</span></h2>
-          <p class="cta-final__sub fade-up" style="--delay: 1">Sign up now and get full access — completely free until September. No credit card. No commitment.</p>
+          <p class="cta-final__sub fade-up" style="--delay: 1" data-deadline-sub>Sign up now and get full access — completely free until September. No credit card. No commitment.</p>
           <p class="cta-final__sub2 fade-up" style="--delay: 1">In return? Just tell us what works and what doesn't. Your feedback shapes the product.</p>
           <div class="cta-final__divider"></div>
           <div class="cta-final__perks fade-up" style="--delay: 2">
@@ -682,7 +679,7 @@
           </div>
           <div class="cta-final__divider"></div>
           <div class="cta-final__actions fade-up" style="--delay: 3">
-            <a href="https://app.owntreat.com" class="btn btn--primary cta-final__btn">Join Free — Until September</a>
+            <a href="https://app.owntreat.com" class="btn btn--primary cta-final__btn" data-deadline-btn>Join Free — Until September</a>
             <p class="cta-final__trust">Limited spots. Real support.</p>
           </div>
         </div>
@@ -721,6 +718,7 @@
     </div>
   </footer>
 
+  <script src="js/bg-shader.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/marquee.js"></script>
   <script src="js/nav.js"></script>
