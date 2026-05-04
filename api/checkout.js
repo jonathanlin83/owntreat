@@ -35,7 +35,11 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${req.headers['x-forwarded-proto'] || 'http'}://${req.headers.host}`;
+    // Always derive baseUrl from request headers on production (Vercel injects x-forwarded-proto correctly)
+    // Only fall back to NEXT_PUBLIC_APP_URL if it's a real https/http URL (not localhost)
+    const fromHeaders = `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}`;
+    const envUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const baseUrl = (envUrl && envUrl.startsWith('https://')) ? envUrl : fromHeaders;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
