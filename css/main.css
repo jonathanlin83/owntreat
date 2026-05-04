@@ -233,7 +233,7 @@ body {
 
 .hero__accent {
   color: var(--color-pink);
-  white-space: nowrap;
+  /* removed white-space: nowrap — caused horizontal overflow on mobile */
 }
 
 .tw-line {
@@ -611,7 +611,8 @@ body {
   .hero__inner { flex-direction: column; gap: var(--space-8); text-align: center; }
   .hero__text { text-align: center; }
   .hero__sub { max-width: 100%; margin-inline: auto; }
-  .hero__headline { font-size: clamp(2rem, 6vw, 2.8rem); }
+  .hero__headline { font-size: clamp(1.8rem, 7vw, 2.6rem); word-break: break-word; overflow-wrap: break-word; }
+  .hero__accent { white-space: normal; }
 }
 
 /* ════════════════════════════════════════
