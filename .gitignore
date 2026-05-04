@@ -7,3 +7,5 @@ Reference/
 Demo Store/
 screenshot.js
 .vercel
+.env.local
+.env

@@ -194,7 +194,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-3);
   position: relative;
   z-index: 1;
 }
@@ -226,9 +226,41 @@ body {
   animation: hero-enter 0.7s ease both 0.05s;
 }
 
+.hero__headline.has-typewriter {
+  /* Let the JS control the entrance instead of the default hero-enter animation. */
+  animation: none;
+}
+
 .hero__accent {
   color: var(--color-pink);
   white-space: nowrap;
+}
+
+.tw-line {
+  display: block;
+}
+
+.tw {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tw.is-typing::after {
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 0.95em;
+    margin-left: 0.08em;
+    background: currentColor;
+    opacity: 0.85;
+    transform: translateY(0.08em);
+    animation: tw-caret 0.85s step-end infinite;
+  }
+}
+
+@keyframes tw-caret {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.85; }
 }
 
 .hero__sub {
@@ -763,6 +795,92 @@ body {
   overflow: visible;
 }
 
+/* Orbit hero story: full-bleed 9:16, no white wrapper */
+/* Hero orbit review card */
+.hero__review-card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+  padding: 14px 16px;
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero__review-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero__review-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4285F4, #34A853);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.hero__review-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.hero__review-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.hero__review-source {
+  font-size: 9px;
+  color: var(--color-muted);
+  line-height: 1.2;
+}
+
+.hero__review-google-icon {
+  flex-shrink: 0;
+}
+
+.hero__review-stars {
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.hero__review-text {
+  font-size: 11px;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ugc-post--story-bleed {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  width: 85px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ugc-post--story-bleed .story__image {
+  border-radius: 10px;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  height: auto;
+}
+
 .story__image {
   width: 100%;
   aspect-ratio: 9/16;
@@ -869,6 +987,38 @@ body {
   overflow: hidden;
   border-radius: 10px;
   display: flex;
+}
+
+/* Full-bleed tiktok reel card for hero orbit */
+.ugc-post--tiktok-bleed {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  width: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ugc-post--tiktok-bleed .tiktok__video {
+  border-radius: 10px;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  height: auto;
+}
+
+.tiktok__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Ensure sidebar and bottom overlay the image */
+.ugc-post--tiktok-bleed .tiktok__sidebar,
+.ugc-post--tiktok-bleed .tiktok__bottom {
+  z-index: 1;
 }
 
 .tiktok__sidebar {
@@ -1901,6 +2051,118 @@ body {
   flex-wrap: wrap;
 }
 
+.hero__qr-url {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  transition: color 0.3s ease;
+}
+
+/* ══════════════════════════════════════════
+   HERO ORBIT SYSTEM
+══════════════════════════════════════════ */
+.hero__orbit-system {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.hero__qr-card {
+  z-index: 50; /* HIGHEST Z-INDEX AS REQUESTED */
+  position: relative;
+}
+
+.hero__orbit-card {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero__orbit-card .ugc-post {
+  width: 130px; /* slightly smaller than standard for orbit */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transform: none; /* override default tilt */
+}
+
+/* Card 1: Top Left */
+.hero__orbit-card--1 {
+  top: -10px;
+  left: -165px;
+  z-index: 5;
+  transform: translateZ(-80px) rotateY(15deg) rotateX(10deg) scale(0.85);
+  animation: orbit-float-1 6s ease-in-out infinite alternate;
+  opacity: 0.95;
+}
+
+/* Card 2: Bottom Right */
+.hero__orbit-card--2 {
+  bottom: -30px;
+  right: -185px;
+  z-index: 10;
+  transform: translateZ(-20px) rotateY(-20deg) rotateX(-5deg) scale(1.05);
+  animation: orbit-float-2 7s ease-in-out infinite alternate-reverse;
+  opacity: 1;
+}
+
+/* Card 3: Top Right */
+.hero__orbit-card--3 {
+  top: 10px;
+  right: -195px;
+  z-index: 2;
+  transform: translateZ(-150px) rotateY(-25deg) rotateX(15deg) scale(0.8);
+  animation: orbit-float-3 5.5s ease-in-out infinite alternate;
+  opacity: 0.85;
+}
+
+/* Card 4: Bottom Left */
+.hero__orbit-card--4 {
+  bottom: 10px;
+  left: -185px;
+  z-index: 15;
+  transform: translateZ(-10px) rotateY(25deg) rotateX(-10deg) scale(0.95);
+  animation: orbit-float-4 6.5s ease-in-out infinite alternate;
+  opacity: 0.95;
+}
+
+@keyframes orbit-float-1 {
+  0% { transform: translateZ(-80px) rotateY(15deg) rotateX(10deg) scale(0.85) translateY(0); }
+  100% { transform: translateZ(-80px) rotateY(18deg) rotateX(8deg) scale(0.85) translateY(-15px); }
+}
+
+@keyframes orbit-float-2 {
+  0% { transform: translateZ(-20px) rotateY(-20deg) rotateX(-5deg) scale(1.05) translateY(0); }
+  100% { transform: translateZ(-20px) rotateY(-22deg) rotateX(-7deg) scale(1.05) translateY(-20px); }
+}
+
+@keyframes orbit-float-3 {
+  0% { transform: translateZ(-150px) rotateY(-25deg) rotateX(15deg) scale(0.8) translateY(0); }
+  100% { transform: translateZ(-150px) rotateY(-20deg) rotateX(20deg) scale(0.8) translateY(-10px); }
+}
+
+@keyframes orbit-float-4 {
+  0% { transform: translateZ(-10px) rotateY(25deg) rotateX(-10deg) scale(0.95) translateY(0); }
+  100% { transform: translateZ(-10px) rotateY(28deg) rotateX(-12deg) scale(0.95) translateY(15px); }
+}
+
+@media (max-width: 1024px) {
+  .hero__orbit-card { transform: scale(0.7) !important; }
+  .hero__orbit-card--1 { left: -100px; }
+  .hero__orbit-card--2 { right: -100px; }
+  .hero__orbit-card--3 { right: -120px; }
+  .hero__orbit-card--4 { left: -120px; }
+}
+
+@media (max-width: 768px) {
+  .hero__orbit-card { display: none; } /* Hide orbiting cards on mobile to prevent overflow and keep QR central */
+}
+
 .footer__link {
   font-size: var(--text-sm);
   color: var(--color-muted);
@@ -1930,4 +2192,179 @@ body {
 @media (max-width: 640px) {
   .footer__top { flex-direction: column; align-items: flex-start; }
   .footer__bottom { flex-direction: column; align-items: flex-start; }
+}
+
+/* ════════════════════════════════════════
+   BUY STAND SECTION
+════════════════════════════════════════ */
+.buy-stand__card {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-6);
+  background: var(--color-white);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+@media (max-width: 768px) {
+  .buy-stand__card {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+}
+
+.buy-stand__title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.buy-stand__desc {
+  color: var(--color-muted);
+  font-size: var(--text-base);
+  margin-bottom: var(--space-4);
+  line-height: 1.6;
+}
+
+.buy-stand__features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.buy-stand__features li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.buy-stand__features .check {
+  color: var(--color-pink);
+  font-weight: bold;
+}
+
+.buy-stand__checkout {
+  background: #F9F8F6;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  border: 1px solid var(--color-border);
+}
+
+.buy-stand__price-tier {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.buy-stand__price {
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  color: var(--color-text);
+  font-family: var(--font-display);
+}
+
+.buy-stand__per {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.buy-stand__quantity-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.buy-stand__label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.buy-stand__counter {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-white);
+}
+
+.buy-stand__btn-adjust {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--color-text);
+  transition: background var(--transition-fast);
+}
+
+.buy-stand__btn-adjust:hover:not(:disabled) {
+  background: #F0F0F0;
+}
+
+.buy-stand__btn-adjust:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.buy-stand__input {
+  width: 40px;
+  height: 32px;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  text-align: center;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  -moz-appearance: textfield;
+}
+.buy-stand__input::-webkit-outer-spin-button,
+.buy-stand__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.buy-stand__subtotal-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--color-border);
+  font-size: var(--text-base);
+}
+
+.buy-stand__subtotal {
+  font-weight: 700;
+  font-size: var(--text-lg);
+  color: var(--color-text);
+}
+
+.buy-stand__submit {
+  width: 100%;
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+.buy-stand__secure {
+  font-size: 11px;
+  text-align: center;
+  color: var(--color-muted);
+  margin-top: -4px;
 }

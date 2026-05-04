@@ -59,3 +59,63 @@
 
   counters.forEach((el) => observer.observe(el));
 })();
+
+(function () {
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const headline = document.querySelector('[data-typewriter]');
+  if (!headline) return;
+
+  const parts = Array.from(headline.querySelectorAll('[data-tw-text]'));
+  if (!parts.length) return;
+
+  // If reduced motion is requested, render instantly and skip the typing effect.
+  if (prefersReduced) {
+    parts.forEach((el) => { el.textContent = el.getAttribute('data-tw-text') || ''; });
+    return;
+  }
+
+  headline.classList.add('has-typewriter');
+
+  const original = parts.map((el) => el.getAttribute('data-tw-text') || '');
+  parts.forEach((el) => { el.textContent = ''; });
+
+  const speedMs = 40;      // per character (slower, more readable)
+  const betweenMs = 280;   // between segments
+  const startDelayMs = 160;
+
+  function sleep(ms) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
+
+  async function typeInto(el, text) {
+    el.classList.add('is-typing');
+    for (let i = 0; i < text.length; i++) {
+      el.textContent += text[i];
+      // Small jitter so it feels less robotic.
+      await sleep(speedMs + (i % 3 === 0 ? 10 : 0));
+    }
+    el.classList.remove('is-typing');
+  }
+
+  let started = false;
+  async function start() {
+    if (started) return;
+    started = true;
+    await sleep(startDelayMs);
+    for (let i = 0; i < parts.length; i++) {
+      await typeInto(parts[i], original[i]);
+      await sleep(betweenMs);
+    }
+  }
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        obs.disconnect();
+        start();
+      }
+    });
+  }, { threshold: 0.35 });
+
+  obs.observe(headline);
+})();
