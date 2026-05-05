@@ -77,9 +77,9 @@
   const original = parts.map((el) => el.getAttribute('data-tw-text') || '');
   parts.forEach((el) => { el.textContent = ''; });
 
-  const speedMs = 40;      // per character (slower, more readable)
-  const betweenMs = 280;   // between segments
-  const startDelayMs = 160;
+  const speedMs = 20;      // per character (faster)
+  const betweenMs = 180;   // between segments
+  const startDelayMs = 80;
 
   function sleep(ms) {
     return new Promise((r) => setTimeout(r, ms));

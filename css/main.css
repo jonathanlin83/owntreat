@@ -240,20 +240,25 @@ body {
   display: block;
 }
 
+/* Prevent empty lines from collapsing to 0 height before typing starts */
+.tw-line::before {
+  content: '\200B';
+}
+
 .tw {
-  display: inline-block;
+  display: inline;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .tw.is-typing::after {
     content: "";
     display: inline-block;
-    width: 1px;
-    height: 0.95em;
+    width: 2px;
+    height: 1em;
     margin-left: 0.08em;
     background: currentColor;
     opacity: 0.85;
-    transform: translateY(0.08em);
+    vertical-align: baseline;
     animation: tw-caret 0.85s step-end infinite;
   }
 }
@@ -270,7 +275,14 @@ body {
   margin-bottom: 0;
   max-width: 560px;
   text-wrap: balance;
-  animation: hero-enter 0.7s ease both 0.22s;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.typing-done + .hero__sub {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__sub-accent {
@@ -284,6 +296,8 @@ body {
   border-radius: 6px;
   padding: 2px 8px;
   margin-left: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .typing-done .tw-highlight-target {
@@ -295,8 +309,12 @@ body {
 .hero__cta {
   padding: 16px 36px;
   font-size: var(--text-base);
-  width: 100%;
-  justify-content: center;
+  margin-top: var(--space-4);
+  box-shadow: 0 8px 30px rgba(255,45,135,0.3);
+  transition: all var(--transition-base);
+  opacity: 0;
+  transform: scale(0.5);
+  animation: qr-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 2.0s;
 }
 
 /* ── Hero QR card ── */
@@ -306,7 +324,7 @@ body {
   align-items: center;
   gap: var(--space-4);
   flex-shrink: 0;
-  animation: hero-enter-right 0.8s ease both 0.15s;
+  animation: hero-enter-right 0.8s ease both 0s;
 }
 
 .hero__qr-card {
@@ -2199,9 +2217,57 @@ body {
   overflow: visible;
 }
 
-.hero__qr-card {
-  z-index: 50; /* HIGHEST Z-INDEX AS REQUESTED */
+.hero__qr-pop-wrapper {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
   position: relative;
+  opacity: 0;
+  transform: scale(0.5);
+  animation: qr-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 2.0s;
+}
+
+@keyframes qr-pop {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.hero__qr-card {
+  position: relative;
+}
+
+.hero__orbit-spin-wrapper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  opacity: 0; /* start hidden until animation begins */
+}
+
+/* Add delays and different spin amounts/durations for an organic tornado feel */
+.hero__orbit-spin-wrapper--1 {
+  animation: tornado-spin 2.2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards 0s;
+}
+.hero__orbit-spin-wrapper--2 {
+  animation: tornado-spin-fast 2.4s cubic-bezier(0.1, 0.8, 0.2, 1) forwards 0.15s;
+}
+.hero__orbit-spin-wrapper--3 {
+  animation: tornado-spin 2.6s cubic-bezier(0.1, 0.8, 0.2, 1) forwards 0.25s;
+}
+.hero__orbit-spin-wrapper--4 {
+  animation: tornado-spin-fast 2.8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards 0.1s;
+}
+
+@keyframes tornado-spin {
+  0% { transform: rotateY(-720deg) scale(0.5); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+}
+
+@keyframes tornado-spin-fast {
+  0% { transform: rotateY(-1080deg) scale(0.4); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: rotateY(0deg) scale(1); opacity: 1; }
 }
 
 .hero__orbit-card {
