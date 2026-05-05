@@ -33,10 +33,25 @@
     });
   });
 
-  /* Sticky shadow on scroll */
+  /* Shadow + hide-on-scroll-down / show-on-scroll-up */
   if (navbar) {
+    let lastScrollY = window.scrollY;
+    const HIDE_THRESHOLD = 60;
+
     window.addEventListener('scroll', () => {
-      navbar.classList.toggle('navbar--scrolled', window.scrollY > 16);
+      const currentScrollY = window.scrollY;
+
+      navbar.classList.toggle('navbar--scrolled', currentScrollY > 16);
+
+      if (!menu.classList.contains('is-open')) {
+        if (currentScrollY > HIDE_THRESHOLD) {
+          navbar.classList.toggle('navbar--hidden', currentScrollY > lastScrollY);
+        } else {
+          navbar.classList.remove('navbar--hidden');
+        }
+      }
+
+      lastScrollY = currentScrollY;
     }, { passive: true });
   }
 })();

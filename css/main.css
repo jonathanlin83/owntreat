@@ -47,12 +47,23 @@ body {
    NAVBAR
 ════════════════════════════════════════ */
 .navbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   background: var(--color-white);
   border-bottom: 1px solid var(--color-border);
-  transition: box-shadow var(--transition-base);
+  transition: box-shadow var(--transition-base), transform 0.3s ease;
+}
+.navbar--hidden {
+  transform: translateY(-100%);
+}
+main {
+  padding-top: 64px;
+}
+[id] {
+  scroll-margin-top: 80px;
 }
 /* Navbar gets tighter horizontal padding than page sections
    so logo and CTA sit close to browser edges, like Notion's nav */
