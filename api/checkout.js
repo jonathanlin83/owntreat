@@ -16,22 +16,39 @@ module.exports = async function handler(req, res) {
 
   const { productId, quantity } = req.body;
 
-  if (productId !== 'nfc_stand') {
+  let priceId;
+  let sessionMode = 'payment';
+  let successPath = '';
+  let cancelPath = '';
+
+  if (productId === 'nfc_stand') {
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100) {
+      return res.status(400).json({ error: 'Quantity must be an integer between 1 and 100' });
+    }
+    priceId = quantity >= 15 
+      ? process.env.STRIPE_NFC_STAND_BULK_PRICE_ID 
+      : process.env.STRIPE_NFC_STAND_PRICE_ID;
+    
+    sessionMode = 'payment';
+    successPath = '/success.html?session_id={CHECKOUT_SESSION_ID}';
+    cancelPath = '/#buy-stand';
+
+  } else if (productId === 'growth_plan') {
+    if (!Number.isInteger(quantity) || quantity !== 1) {
+      return res.status(400).json({ error: 'Quantity must be exactly 1 for the Growth Plan' });
+    }
+    priceId = process.env.STRIPE_GROWTH_PLAN_PRICE_ID;
+    
+    sessionMode = 'subscription';
+    successPath = '/get-started?session_id={CHECKOUT_SESSION_ID}&plan=growth';
+    cancelPath = '/#pricing';
+
+  } else {
     return res.status(400).json({ error: 'Invalid product ID' });
   }
 
-  // Validate quantity on the server: minimum 1, maximum 100, must be an integer
-  if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100) {
-    return res.status(400).json({ error: 'Quantity must be an integer between 1 and 100' });
-  }
-
-  // Choose the price ID based on bulk pricing rules
-  const priceId = quantity >= 15 
-    ? process.env.STRIPE_NFC_STAND_BULK_PRICE_ID 
-    : process.env.STRIPE_NFC_STAND_PRICE_ID;
-
   if (!priceId) {
-    return res.status(500).json({ error: 'Stripe pricing is not configured properly.' });
+    return res.status(500).json({ error: 'Stripe pricing is not configured properly for this product.' });
   }
 
   try {
@@ -49,10 +66,9 @@ module.exports = async function handler(req, res) {
           quantity: quantity,
         },
       ],
-      mode: 'payment',
-      // Since there is no /success or /stands routing, we use .html and /#buy-stand
-      success_url: `${baseUrl}/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/#buy-stand`,
+      mode: sessionMode,
+      success_url: `${baseUrl}${successPath}`,
+      cancel_url: `${baseUrl}${cancelPath}`,
     });
 
     res.status(200).json({ url: session.url });

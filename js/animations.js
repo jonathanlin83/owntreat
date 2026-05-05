@@ -22,16 +22,14 @@
 (function () {
   const MONTHS = ['January','February','March','April','May','June',
                   'July','August','September','October','November','December'];
-  const next = new Date();
-  next.setMonth(next.getMonth() + 1);
-  const label = MONTHS[next.getMonth()];
+  const now = new Date();
+  
+  // Get the last day of the current month
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const monthName = MONTHS[now.getMonth()];
 
   const btn = document.querySelector('[data-deadline-btn]');
-  if (btn) btn.textContent = `Join Free — Until ${label}`;
-
-  const sub = document.querySelector('[data-deadline-sub]');
-  if (sub) sub.textContent =
-    `Sign up now and get full access — completely free until ${label}. No credit card. No commitment.`;
+  if (btn) btn.textContent = `Join Free Before ${monthName} ${lastDay}`;
 })();
 
 (function () {
@@ -106,6 +104,7 @@
       await typeInto(parts[i], original[i]);
       await sleep(betweenMs);
     }
+    headline.classList.add('typing-done');
   }
 
   const obs = new IntersectionObserver((entries) => {

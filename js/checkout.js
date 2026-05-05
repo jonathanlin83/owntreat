@@ -108,3 +108,45 @@
   // Initialize
   updateDisplay();
 })();
+
+// Growth Plan Checkout
+(function () {
+  const growthBtn = document.getElementById('growth-plan-btn');
+  if (!growthBtn) return;
+
+  growthBtn.addEventListener('click', async () => {
+    const originalText = growthBtn.textContent;
+    growthBtn.textContent = 'Redirecting...';
+    growthBtn.style.pointerEvents = 'none';
+    growthBtn.style.opacity = '0.7';
+
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: 'growth_plan',
+          quantity: 1
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to checkout');
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Error during checkout: ' + error.message);
+      growthBtn.textContent = originalText;
+      growthBtn.style.pointerEvents = 'auto';
+      growthBtn.style.opacity = '1';
+    }
+  });
+})();
